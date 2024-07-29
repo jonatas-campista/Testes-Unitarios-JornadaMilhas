@@ -11,7 +11,7 @@ public class OfertaViagem: Valida
 {
     public int Id { get; set; }
     public Rota Rota { get; set; } 
-    public Periodo Periodo { get; set; }
+    public Periodo ?Periodo { get; set; }
     public double Preco { get; set; }
 
 
