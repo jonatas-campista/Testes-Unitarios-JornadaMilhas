@@ -2,10 +2,10 @@ using JornadaMilhasV1.Modelos;
 
 namespace JornadaMilhas.Test
 {
-    public class OfertaViagemTest
+    public class OfertaViagemConstrutor
     {
         [Fact]
-        public void TestandoOfertaValida()
+        public void RetornaOfertaValidaQuandoDadosValidos()
         {
             //cenario
             Rota rota = new Rota("origemTeste","destinoTeste");
@@ -20,7 +20,7 @@ namespace JornadaMilhas.Test
             Assert.Equal(validacao,oferta.EhValido);
         }
         [Fact]
-        public void TestandoOfertaComRotaNula()
+        public void RetornaErrorDeRotaInvalidaOuPeriodoInvalidoQuandoRotaNula()
         {   
             //cenario
             Rota rota = null;
@@ -36,7 +36,7 @@ namespace JornadaMilhas.Test
         }
 
         [Fact]
-        public void TestandoOfertaComDataInicialMaiorQueFinal()
+        public void RetornaErrorDataIdaNaoPodeSerMaiorQueDataVoltaQuandoDataIdaForMaiorQueDataVolta()
         {
             //cenario
             Rota rota = new Rota("origemTeste", "destinoTeste");
@@ -52,7 +52,7 @@ namespace JornadaMilhas.Test
         }
 
         [Fact]
-        public void TestandoOfertaComPriceMenorQueZero()
+        public void RetornaErrorDePrecoInvalidoQuandoPrecoMenorQueZero()
         {
             //cenario
             Rota rota = new Rota("origemTeste", "destinoTeste");
