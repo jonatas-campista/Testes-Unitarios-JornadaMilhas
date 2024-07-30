@@ -22,7 +22,6 @@ public class OfertaViagem: Valida
         Preco = preco;
         Validar();
     }
-
     public override string ToString()
     {
         return $"Origem: {Rota.Origem}, Destino: {Rota.Destino}, Data de Ida: {Periodo.DataInicial.ToShortDateString()}, Data de Volta: {Periodo.DataFinal.ToShortDateString()}, Preço: {Preco:C}";

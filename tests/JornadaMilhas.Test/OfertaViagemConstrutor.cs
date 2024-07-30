@@ -33,8 +33,7 @@ namespace JornadaMilhas.Test
         [Theory]
         [InlineData("origemTeste", "destinoTeste", "2024-02-01", "2024-02-05", -1, false, "O preço da oferta de viagem deve ser maior que zero.")]
         [InlineData("origemTeste", "destinoTeste", "2024-02-01", "2024-02-05", 0, false, "O preço da oferta de viagem deve ser maior que zero.")]
-        [InlineData("origemTeste", "destinoTeste", "2024-02-01", "2024-02-05", 100, true, "")]
-        public void RetornaRetornaMensagemDeErroDePrecoInvalidoQuandoPrecoMenorQueZero(string origem,string destino,string dataIda,string dataVolta,double preco,bool ehValido,string mensagemErro)
+        public void RetornaMensagemDeErrorDePrecoInvalidoQuandoPrecoMenorOuIgualZero(string origem,string destino,string dataIda,string dataVolta,double preco,bool ehValido,string mensagemErro)
         {
             Rota rota = new Rota(origem, destino);
             Periodo periodo = new Periodo(DateTime.Parse(dataIda), DateTime.Parse(dataVolta));
