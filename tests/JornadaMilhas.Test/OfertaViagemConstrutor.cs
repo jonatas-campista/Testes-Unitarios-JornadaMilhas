@@ -4,67 +4,31 @@ namespace JornadaMilhas.Test
 {
     public class OfertaViagemConstrutor
     {
-        [Fact]
-        public void RetornaOfertaValidaQuandoDadosValidos()
+        [Theory]
+        [InlineData(null, null, "2024-02-01", "2024-02-05", 100.0, false, "A oferta de viagem não possui rota ou período válidos.")]
+        [InlineData("origemTeste", "destinoTeste", "2024-02-01", "2024-02-05", 100.0, true, "")]
+        [InlineData("origemTeste", null, "2024-02-01", "2024-02-05", 100.0, false, "A oferta de viagem não possui rota ou período válidos.")]
+        [InlineData(null, "destinoTeste", "2024-02-01", "2024-02-05", 100.0, false, "A oferta de viagem não possui rota ou período válidos.")]
+        [InlineData("origemTeste", "destinoTeste", null, "2024-02-05", 100.0, false, "A oferta de viagem não possui rota ou período válidos.")]
+        [InlineData("origemTeste", "destinoTeste", "2024-02-01", null, 100.0, false, "A oferta de viagem não possui rota ou período válidos.")]
+        [InlineData("origemTeste", "destinoTeste", "2024-03-01", "2024-02-05", 100.0, false, "Erro: Data de ida não pode ser maior que a data de volta.")]
+        [InlineData("origemTeste", "destinoTeste", "2024-02-01", "2024-02-05", -1, false, "O preço da oferta de viagem deve ser maior que zero.")]
+        [InlineData("origemTeste", "destinoTeste", "2024-02-01", "2024-02-05", 0, false, "O preço da oferta de viagem deve ser maior que zero.")]
+        public void RetornaEhValidoDeAcordoComDadosDeEntrada(string origem, string destino, string dataIda, string dataVolta, double preco, bool ehValido, string mensagemErro)
         {
-            //cenario
-            Rota rota = new Rota("origemTeste","destinoTeste");
-            Periodo periodo = new Periodo(new DateTime(2024, 2, 1), new DateTime(2024, 2, 5));
-            double preco = 100.0;
-            var validacao = true;
+            // cenário
+            Rota? rota = (origem == null || destino == null) ? null : new Rota(origem, destino);
+            Periodo? periodo = dataIda == null || dataVolta == null ? null : new Periodo(DateTime.Parse(dataIda), DateTime.Parse(dataVolta));
 
-            //ação
+            // ação
             OfertaViagem oferta = new OfertaViagem(rota, periodo, preco);
 
-            //validação
-            Assert.Equal(validacao,oferta.EhValido);
-        }
-        [Fact]
-        public void RetornaErrorDeRotaInvalidaOuPeriodoInvalidoQuandoRotaNula()
-        {   
-            //cenario
-            Rota rota = null;
-            Periodo periodo = new Periodo(new DateTime(2024, 2, 1), new DateTime(2024, 2, 5));
-            double preco = 100.0;
-
-            //ação
-            OfertaViagem oferta = new OfertaViagem(rota, periodo, preco);
-
-            //validação
-            Assert.Contains("A oferta de viagem não possui rota ou período válidos.",oferta.Erros.Sumario);
-            Assert.False(oferta.EhValido);
-        }
-
-        [Fact]
-        public void RetornaErrorDataIdaNaoPodeSerMaiorQueDataVoltaQuandoDataIdaForMaiorQueDataVolta()
-        {
-            //cenario
-            Rota rota = new Rota("origemTeste", "destinoTeste");
-            Periodo periodo = new Periodo(new DateTime(2024, 2, 5), new DateTime(2024, 2, 1));
-            double preco = 100.0;
-
-            //ação
-            OfertaViagem oferta = new OfertaViagem(rota, periodo, preco);
-
-            //validação
-            Assert.Contains("Erro: Data de ida não pode ser maior que a data de volta.", oferta.Erros.Sumario);
-            Assert.False(oferta.EhValido);
-        }
-
-        [Fact]
-        public void RetornaErrorDePrecoInvalidoQuandoPrecoMenorQueZero()
-        {
-            //cenario
-            Rota rota = new Rota("origemTeste", "destinoTeste");
-            Periodo periodo = new Periodo(new DateTime(2024, 2, 1), new DateTime(2024, 2, 5));
-            double preco = -1;
-
-            //ação
-            OfertaViagem oferta = new OfertaViagem(rota, periodo, preco);
-
-            //validação
-            Assert.Contains("O preço da oferta de viagem deve ser maior que zero.", oferta.Erros.Sumario);
-            Assert.False(oferta.EhValido);
+            // validação
+            if (!string.IsNullOrEmpty(mensagemErro))
+            {
+                Assert.Contains(mensagemErro, oferta.Erros.Sumario);
+            }
+            Assert.Equal(ehValido, oferta.EhValido);
         }
     }
 }
