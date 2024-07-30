@@ -9,7 +9,7 @@ namespace JornadaMilhasV1.Modelos;
 
 public class OfertaViagem : Valida
 {
-    public const double DESCONTO_MAXIMO = 0.7
+    public const double DESCONTO_MAXIMO = 0.7;
     private double desconto;
 
     public int Id { get; set; }
@@ -50,12 +50,13 @@ public class OfertaViagem : Valida
         if (Rota == null || Periodo == null)
         {
             Erros.RegistrarErro("A oferta de viagem não possui rota ou período válidos.");
+           
         }
-        else if (!Periodo.EhValido)
+        if (!Periodo.EhValido)
         {
             Erros.RegistrarErro(Periodo.Erros.Sumario);
         }
-        else if (Preco <= 0)
+        if (Preco <= 0)
         {
             Erros.RegistrarErro("O preço da oferta de viagem deve ser maior que zero.");
         }

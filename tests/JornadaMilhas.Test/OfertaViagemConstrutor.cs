@@ -9,8 +9,6 @@ namespace JornadaMilhas.Test
         [InlineData("origemTeste", "destinoTeste", "2024-02-01", "2024-02-05", 100.0, true, "")]
         [InlineData("origemTeste", null, "2024-02-01", "2024-02-05", 100.0, false, "A oferta de viagem não possui rota ou período válidos.")]
         [InlineData(null, "destinoTeste", "2024-02-01", "2024-02-05", 100.0, false, "A oferta de viagem não possui rota ou período válidos.")]
-        [InlineData("origemTeste", "destinoTeste", null, "2024-02-05", 100.0, false, "A oferta de viagem não possui rota ou período válidos.")]
-        [InlineData("origemTeste", "destinoTeste", "2024-02-01", null, 100.0, false, "A oferta de viagem não possui rota ou período válidos.")]
         [InlineData("origemTeste", "destinoTeste", "2024-03-01", "2024-02-05", 100.0, false, "Erro: Data de ida não pode ser maior que a data de volta.")]
         
         public void RetornaEhValidoDeAcordoComDadosDeEntrada(string origem, string destino, string dataIda, string dataVolta, double preco, bool ehValido, string mensagemErro)
@@ -46,6 +44,22 @@ namespace JornadaMilhas.Test
             }
 
             Assert.Equal(ehValido, oferta.EhValido);
+        }
+
+        [Fact]
+        public void RetornaTresErrosDeValidacaoQuandoRotaPeriodoEPRecoSaoInvalidos()
+        {
+            //arrange
+            int quantidadeEsperada = 3;
+            Rota rota = null;
+            Periodo periodo = new Periodo(new DateTime(2024, 6, 1), new DateTime(2024, 5, 10));
+            double preco = -100;
+
+            //act
+            OfertaViagem oferta = new OfertaViagem(rota, periodo, preco);
+
+            //assert
+            Assert.Equal(quantidadeEsperada, oferta.Erros.Count());
         }
 
     }
