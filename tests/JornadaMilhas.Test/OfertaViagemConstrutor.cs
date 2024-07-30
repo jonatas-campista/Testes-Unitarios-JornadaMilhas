@@ -12,8 +12,7 @@ namespace JornadaMilhas.Test
         [InlineData("origemTeste", "destinoTeste", null, "2024-02-05", 100.0, false, "A oferta de viagem não possui rota ou período válidos.")]
         [InlineData("origemTeste", "destinoTeste", "2024-02-01", null, 100.0, false, "A oferta de viagem não possui rota ou período válidos.")]
         [InlineData("origemTeste", "destinoTeste", "2024-03-01", "2024-02-05", 100.0, false, "Erro: Data de ida não pode ser maior que a data de volta.")]
-        [InlineData("origemTeste", "destinoTeste", "2024-02-01", "2024-02-05", -1, false, "O preço da oferta de viagem deve ser maior que zero.")]
-        [InlineData("origemTeste", "destinoTeste", "2024-02-01", "2024-02-05", 0, false, "O preço da oferta de viagem deve ser maior que zero.")]
+        
         public void RetornaEhValidoDeAcordoComDadosDeEntrada(string origem, string destino, string dataIda, string dataVolta, double preco, bool ehValido, string mensagemErro)
         {
             // cenário
@@ -28,6 +27,25 @@ namespace JornadaMilhas.Test
             {
                 Assert.Contains(mensagemErro, oferta.Erros.Sumario);
             }
+            Assert.Equal(ehValido, oferta.EhValido);
+        }
+
+        [Theory]
+        [InlineData("origemTeste", "destinoTeste", "2024-02-01", "2024-02-05", -1, false, "O preço da oferta de viagem deve ser maior que zero.")]
+        [InlineData("origemTeste", "destinoTeste", "2024-02-01", "2024-02-05", 0, false, "O preço da oferta de viagem deve ser maior que zero.")]
+        [InlineData("origemTeste", "destinoTeste", "2024-02-01", "2024-02-05", 100, true, "")]
+        public void RetornaRetornaMensagemDeErroDePrecoInvalidoQuandoPrecoMenorQueZero(string origem,string destino,string dataIda,string dataVolta,double preco,bool ehValido,string mensagemErro)
+        {
+            Rota rota = new Rota(origem, destino);
+            Periodo periodo = new Periodo(DateTime.Parse(dataIda), DateTime.Parse(dataVolta));
+
+            OfertaViagem oferta = new OfertaViagem(rota,periodo,preco);
+
+            if (!string.IsNullOrEmpty(mensagemErro))
+            {
+                Assert.Contains(mensagemErro, oferta.Erros.Sumario);
+            }
+
             Assert.Equal(ehValido, oferta.EhValido);
         }
     }
