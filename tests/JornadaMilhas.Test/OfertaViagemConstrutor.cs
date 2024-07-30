@@ -10,7 +10,8 @@ namespace JornadaMilhas.Test
         [InlineData("origemTeste", null, "2024-02-01", "2024-02-05", 100.0, false, "A oferta de viagem não possui rota ou período válidos.")]
         [InlineData(null, "destinoTeste", "2024-02-01", "2024-02-05", 100.0, false, "A oferta de viagem não possui rota ou período válidos.")]
         [InlineData("origemTeste", "destinoTeste", "2024-03-01", "2024-02-05", 100.0, false, "Erro: Data de ida não pode ser maior que a data de volta.")]
-        
+        [InlineData("origemTeste", "destinoTeste", "2024-03-01", "2024-03-01", 100.0, true, "")]
+
         public void RetornaEhValidoDeAcordoComDadosDeEntrada(string origem, string destino, string dataIda, string dataVolta, double preco, bool ehValido, string mensagemErro)
         {
             // cenário
@@ -60,6 +61,29 @@ namespace JornadaMilhas.Test
 
             //assert
             Assert.Equal(quantidadeEsperada, oferta.Erros.Count());
+        }
+
+        [Fact]
+        public void ToStringDeveRetornarStringFormatadaCorretamente()
+        {
+            // Arrange
+            var origem = "origemTeste";
+            var destino = "destinoTeste";
+            var dataIda = new DateTime(2024, 2, 1);
+            var dataVolta = new DateTime(2024, 2, 5);
+            var preco = 100.0;
+
+            var rota = new Rota(origem, destino);
+            var periodo = new Periodo(dataIda, dataVolta);
+            var oferta = new OfertaViagem(rota, periodo, preco);
+
+            var expected = $"Origem: {origem}, Destino: {destino}, Data de Ida: {dataIda.ToShortDateString()}, Data de Volta: {dataVolta.ToShortDateString()}, Preço: {preco:C}";
+
+            // Act
+            var result = oferta.ToString();
+
+            // Assert
+            Assert.Equal(expected, result);
         }
 
     }
